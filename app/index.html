@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" xmlns:fb="https://www.facebook.com/2008/fbml">
+<head>
+<meta charset="UTF-8" />
+<title>backbone-nav-dropdown</title>
+<meta name="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" href="css/style.css" />
+<script src="js/jquery.min.js"></script>
+<script src="js/underscore.js"></script>
+<script src="js/backbone.js"></script>
+<script src="../dist/nav-dropdown.js"></script>
+<script>
+$(function () {
+  dropdownNav = new $.DropdownNav({
+    el: '.nav-dropdown>ul>li',
+    transitionDuration: 250
+  })
+});
+</script>
+</head>
+<body>
+
+<div class="container">
+<div class="main">
+	
+<h1>backbone-nav-dropdown</h1>
+<p><a href="https://github.com/seckie/backbone-slider">source on github</a></p>
+
+<nav class="nav-dropdown">
+<ul>
+  <li><a href="#">Nav1</a></li>
+  <li>
+  <a href="#">Nav2</a>
+  <ul>
+    <li><a href="#">Nav2-1</a></li>
+    <li><a href="#">Nav2-2</a></li>
+  </ul>
+  </li>
+  <li>
+  <a href="#">Nav3</a>
+  <ul>
+    <li><a href="#">Nav3-1</a></li>
+    <li><a href="#">Nav3-2</a></li>
+    <li><a href="#">Nav3-3</a></li>
+  </ul>
+  </li>
+  <li>
+  <a href="#">Nav4</a>
+  <ul>
+    <li><a href="#">Nav4-1</a></li>
+    <li><a href="#">Nav4-2</a></li>
+    <li><a href="#">Nav4-3</a></li>
+    <li><a href="#">Nav4-4</a></li>
+  </ul>
+  </li>
+</ul>
+<!--/.drilldown-container-->
+<!--/.nav-global--></nav>
+
+	
+<!--/.main--></div>
+<!--/.container--></div>
+</body>
+</html>

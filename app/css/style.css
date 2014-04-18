@@ -1,0 +1,40 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font: inherit; font-size: 100%; vertical-align: baseline; }
+
+html { line-height: 1; }
+
+ol, ul { list-style: none; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+caption, th, td { text-align: left; font-weight: normal; vertical-align: middle; }
+
+q, blockquote { quotes: none; }
+q:before, q:after, blockquote:before, blockquote:after { content: ""; content: none; }
+
+a img { border: none; }
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary { display: block; }
+
+body { background-color: #dddddd; line-height: 1.5; }
+
+h1 { margin: 20px 0; font-size: 36px; }
+
+h2 { margin: 20px 0; font-size: 32px; text-align: center; }
+
+p { margin: 0 0 25px; }
+
+a { color: #3399ff; }
+
+.container { position: relative; min-width: 960px; width: 100%; overflow: hidden; }
+
+.main { width: 960px; margin: 0 auto; padding-bottom: 30px; }
+
+.nav-dropdown { width: 100%; }
+.nav-dropdown ul { position: relative; background-color: #fff; *zoom: 1; font-size: 18px; line-height: 24px; }
+.nav-dropdown ul:after { content: ""; display: block; clear: both; }
+.nav-dropdown ul > li { position: relative; float: left; width: 25%; }
+.nav-dropdown ul > li a { display: block; padding: 15px 0; border-right: 1px solid #dddddd; color: #333; text-align: center; text-decoration: none; }
+.nav-dropdown ul > li ul { visibility: hidden; width: 400%; overflow: hidden; background-color: #f3f3ff; font-size: 14px; line-height: 24px; -webkit-transition: height 250ms; -moz-transition: height 250ms; -o-transition: height 250ms; transition: height 250ms; }
+.nav-dropdown ul > li:nth-child(2) ul { margin-left: -100%; }
+.nav-dropdown ul > li:nth-child(3) ul { margin-left: -200%; }
+.nav-dropdown ul > li:nth-child(4) ul { margin-left: -300%; }
