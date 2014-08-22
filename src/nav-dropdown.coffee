@@ -71,15 +71,14 @@
         return true # default link
 
       @closeAll(trigger).done ->
-        if $child.hasClass(self.opt.activeClass)
+        if $trigger.hasClass(self.opt.activeClass)
           # off
           $trigger.removeClass(self.opt.activeClass)
-          $child.removeClass(self.opt.activeClass).height(0)
+          $child.height(0)
         else
           # on
           $trigger.addClass(self.opt.activeClass)
-          $child.addClass(self.opt.activeClass)
-            .height($trigger.data('childheight'))
+          $child.height($trigger.data('childheight'))
       @opened = true
       e.preventDefault()
       return
@@ -88,11 +87,12 @@
       self = @
       dfd = $.Deferred()
       @$el.each (i, el) ->
-        $child = $(el).data('$child')
+        $el = $(el)
+        $child = $el.data('$child')
         if el isnt exclude
-          if $child? and $child[0] and $child.hasClass(self.opt.activeClass)
-            $(el).removeClass(self.opt.activeClass)
-            $child.removeClass(self.opt.activeClass).height(0)
+          if $child? and $child[0] and $el.hasClass(self.opt.activeClass)
+            $el.removeClass(self.opt.activeClass)
+            $child.height(0)
         return
       if @opened is true
         setTimeout dfd.resolve, @opt.transitionDuration

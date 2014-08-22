@@ -78,12 +78,12 @@
         return true;
       }
       this.closeAll(trigger).done(function() {
-        if ($child.hasClass(self.opt.activeClass)) {
+        if ($trigger.hasClass(self.opt.activeClass)) {
           $trigger.removeClass(self.opt.activeClass);
-          return $child.removeClass(self.opt.activeClass).height(0);
+          return $child.height(0);
         } else {
           $trigger.addClass(self.opt.activeClass);
-          return $child.addClass(self.opt.activeClass).height($trigger.data('childheight'));
+          return $child.height($trigger.data('childheight'));
         }
       });
       this.opened = true;
@@ -94,12 +94,13 @@
       self = this;
       dfd = $.Deferred();
       this.$el.each(function(i, el) {
-        var $child;
-        $child = $(el).data('$child');
+        var $child, $el;
+        $el = $(el);
+        $child = $el.data('$child');
         if (el !== exclude) {
-          if (($child != null) && $child[0] && $child.hasClass(self.opt.activeClass)) {
-            $(el).removeClass(self.opt.activeClass);
-            $child.removeClass(self.opt.activeClass).height(0);
+          if (($child != null) && $child[0] && $el.hasClass(self.opt.activeClass)) {
+            $el.removeClass(self.opt.activeClass);
+            $child.height(0);
           }
         }
       });
