@@ -13,7 +13,8 @@
     initialize: function(options) {
       this.opt = {
         transitionDuration: 250,
-        child: 'ul'
+        child: 'ul',
+        activeClass: 'on'
       };
       $.extend(this.opt, options);
       _.bindAll(this, 'update', 'handler', 'closeAll');
@@ -63,7 +64,8 @@
       });
     },
     handler: function(e) {
-      var $child, $trigger, trigger;
+      var $child, $trigger, self, trigger;
+      self = this;
       trigger = e.currentTarget;
       if ($(trigger).data('container')) {
         trigger = $(trigger).data('container');
@@ -76,24 +78,28 @@
         return true;
       }
       this.closeAll(trigger).done(function() {
-        if ($child.hasClass('on')) {
-          return $child.removeClass('on').height(0);
+        if ($child.hasClass(self.opt.activeClass)) {
+          $trigger.removeClass(self.opt.activeClass);
+          return $child.removeClass(self.opt.activeClass).height(0);
         } else {
-          return $child.addClass('on').height($trigger.data('childheight'));
+          $trigger.addClass(self.opt.activeClass);
+          return $child.addClass(self.opt.activeClass).height($trigger.data('childheight'));
         }
       });
       this.opened = true;
       e.preventDefault();
     },
     closeAll: function(exclude) {
-      var dfd;
+      var dfd, self;
+      self = this;
       dfd = $.Deferred();
       this.$el.each(function(i, el) {
         var $child;
         $child = $(el).data('$child');
         if (el !== exclude) {
-          if (($child != null) && $child[0] && $child.hasClass('on')) {
-            $child.removeClass('on').height(0);
+          if (($child != null) && $child[0] && $child.hasClass(self.opt.activeClass)) {
+            $(el).removeClass(self.opt.activeClass);
+            $child.removeClass(self.opt.activeClass).height(0);
           }
         }
       });

@@ -56,6 +56,12 @@ var nav = new $.NavDropdown({
 <td>String</td>
 <td>Selector that specifies child navigation. If sub nav aren't descendent of main nav, set <b>'null'</b> to this option.</td>
 </tr>
+<tr>
+<td>activeClass</td>
+<td>'on'</td>
+<td>String</td>
+<td>It'll be added to active element</td>
+</tr>
 </tbody>
 </table>
 

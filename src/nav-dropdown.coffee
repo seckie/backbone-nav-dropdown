@@ -15,6 +15,7 @@
       @opt = {
         transitionDuration: 250
         child: 'ul'
+        activeClass: 'on'
       }
       $.extend(@opt, options)
       _.bindAll(this, 'update', 'handler', 'closeAll')
@@ -58,6 +59,7 @@
         return
 
     handler: (e) ->
+      self = @
       trigger = e.currentTarget
       if $(trigger).data('container')
         trigger = $(trigger).data('container')
@@ -69,24 +71,28 @@
         return true # default link
 
       @closeAll(trigger).done ->
-        if $child.hasClass('on')
+        if $child.hasClass(self.opt.activeClass)
           # off
-          $child.removeClass('on').height(0)
+          $trigger.removeClass(self.opt.activeClass)
+          $child.removeClass(self.opt.activeClass).height(0)
         else
           # on
-          $child.addClass('on')
+          $trigger.addClass(self.opt.activeClass)
+          $child.addClass(self.opt.activeClass)
             .height($trigger.data('childheight'))
       @opened = true
       e.preventDefault()
       return
 
     closeAll: (exclude) ->
+      self = @
       dfd = $.Deferred()
       @$el.each (i, el) ->
         $child = $(el).data('$child')
         if el isnt exclude
-          if $child? and $child[0] and $child.hasClass('on')
-            $child.removeClass('on').height(0)
+          if $child? and $child[0] and $child.hasClass(self.opt.activeClass)
+            $(el).removeClass(self.opt.activeClass)
+            $child.removeClass(self.opt.activeClass).height(0)
         return
       if @opened is true
         setTimeout dfd.resolve, @opt.transitionDuration
