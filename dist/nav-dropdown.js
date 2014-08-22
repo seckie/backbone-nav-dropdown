@@ -13,12 +13,32 @@ $.DropdownNav = Backbone.View.extend({
     this.opened = false;
   },
   update: function() {
-    var self;
+    var errorMsg, self;
     self = this;
+    errorMsg = '$.DropdownNav: child element not found';
     return this.$el.each(function(i, el) {
       var $child, $el, $link;
       $el = $(el);
-      $child = $el.find(self.opt.child);
+      $link = $el.find('>a');
+      if ($link[0]) {
+        $link.data('container', el);
+        $link.on('click', self.handler);
+      } else {
+        $el.on('click', self.handler);
+      }
+      if (self.opt.child === null) {
+        if ($link[0]) {
+          $child = $($link.attr('href'));
+          if ($child[0] == null) {
+            return;
+          }
+        } else {
+          console.error(errorMsg);
+          return;
+        }
+      } else {
+        $child = $el.find(self.opt.child);
+      }
       if ($child[0] != null) {
         $child.css({
           height: '',
@@ -30,13 +50,6 @@ $.DropdownNav = Backbone.View.extend({
           visibility: 'visible'
         });
         $el.data('$child', $child);
-      }
-      $link = $el.find('>a');
-      if ($link[0]) {
-        $link.data('container', el);
-        $link.on('click', self.handler);
-      } else {
-        $el.on('click', self.handler);
       }
     });
   },

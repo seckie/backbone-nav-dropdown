@@ -15,9 +15,27 @@ $.DropdownNav = Backbone.View.extend(
 
   update: ->
     self = @
+    errorMsg = '$.DropdownNav: child element not found'
     @$el.each (i, el) ->
       $el = $(el)
-      $child = $el.find(self.opt.child)
+      $link = $el.find('>a')
+      if $link[0]
+        $link.data 'container', el
+        $link.on 'click', self.handler
+      else
+        $el.on 'click', self.handler
+
+      if self.opt.child is null
+        if $link[0]
+          $child = $($link.attr('href'))
+          if !$child[0]?
+            return # nothing to do
+        else
+          console.error errorMsg
+          return
+      else
+        $child = $el.find(self.opt.child)
+
       if $child[0]?
         $child.css
           height: ''
@@ -27,12 +45,6 @@ $.DropdownNav = Backbone.View.extend(
           height: 0
           visibility: 'visible'
         $el.data('$child', $child)
-      $link = $el.find('>a')
-      if $link[0]
-        $link.data 'container', el
-        $link.on 'click', self.handler
-      else
-        $el.on 'click', self.handler
       return
 
   handler: (e) ->
