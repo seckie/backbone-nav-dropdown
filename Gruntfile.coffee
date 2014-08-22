@@ -3,7 +3,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-contrib-compass'
   grunt.loadNpmTasks 'grunt-contrib-copy'
-  grunt.loadNpmTasks 'grunt-contrib-rename'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
 
@@ -16,23 +15,23 @@ module.exports = (grunt) ->
         files:
           'dist/nav-dropdown.js': [
             # join
-            'coffee/nav-dropdown.coffee'
+            'src/nav-dropdown.coffee'
           ]
     coffeelint:
       # DOC: https://github.com/vojtajina/grunt-coffeelint
       # DOC: http://www.coffeelint.org/
       main:
         files:
-          src: [ 'coffee/*.coffee' ]
+          src: [ 'src/*.coffee' ]
         options:
           'no_trailing_whitespace':
             'level': 'error'
     compass:
       options:
         httpPath: '/' # You have to reconfigure this option
-        sassDir: 'scss'
-        cssDir: 'app/css'
-        imagesDir: 'app/img'
+        sassDir: 'src'
+        cssDir: 'demo'
+        imagesDir: 'demo/img'
         relativeAssets: true
       dev:
         options:
@@ -47,33 +46,19 @@ module.exports = (grunt) ->
             expand: true
             cwd: 'bower_components/jquery/dist/'
             src: [ 'jquery.min.js' ]
-            dest: 'app/js/'
-          }
-          {
-            expand: true
-            cwd: 'bower_components/jquery-1.11.0/'
-            src: [ 'index.js' ]
-            dest: 'app/js/'
+            dest: 'demo'
           }
           {
             expand: true
             cwd: 'bower_components/underscore/'
             src: [ 'underscore.js' ]
-            dest: 'app/js/'
+            dest: 'demo'
           }
           {
             expand: true
             cwd: 'bower_components/backbone/'
             src: [ 'backbone.js' ]
-            dest: 'app/js/'
-          }
-        ]
-    rename:
-      main:
-        files: [
-          {
-            src: [ 'app/js/index.js' ]
-            dest: 'app/js/jquery-1.11.0.min.js'
+            dest: 'demo'
           }
         ]
     jshint:
@@ -83,22 +68,22 @@ module.exports = (grunt) ->
         src: [ 'dist/*.js' ]
     watch:
       coffee:
-        files: [ 'coffee/*.coffee' ]
+        files: [ 'src/*.coffee' ]
         tasks: [ 'coffee' ]
       coffeelint:
-        files: [ 'coffee/*.coffee' ]
+        files: [ 'src/*.coffee' ]
         tasks: [ 'coffeelint' ]
       scss:
-        files: [ 'scss/*.scss' ]
+        files: [ 'src/*.scss' ]
         tasks: [ 'compass:dev' ]
       html:
         options:
           livereload: true
-        files: [ 'app/**/*.html' ]
+        files: [ 'demo/**/*.html' ]
       css:
         options:
           livereload: true
-        files: [ 'app/css/*' ]
+        files: [ 'demo/*.css' ]
       js:
         options:
           livereload: true
@@ -107,4 +92,4 @@ module.exports = (grunt) ->
   )
 
   grunt.registerTask('default', [ 'coffee', 'compass', 'watch' ])
-  grunt.registerTask 'deploy', [ 'copy', 'rename', 'coffee', 'compass' ]
+  grunt.registerTask 'deploy', [ 'copy', 'coffee', 'compass' ]
