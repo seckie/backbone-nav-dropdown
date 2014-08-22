@@ -14,7 +14,8 @@
 $(function () {
   dropdownNav = new $.DropdownNav({
     el: '.nav-dropdown>ul>li',
-    transitionDuration: 250
+    transitionDuration: 250,
+    child: 'ul'
   })
 });
 </script>
@@ -28,18 +29,18 @@ $(function () {
 <p><a href="https://github.com/seckie/backbone-nav-dropdown">source on github</a></p>
 
 <nav class="nav-dropdown">
-<ul>
+<ul class="list">
   <li><a href="#">Nav1</a></li>
   <li>
   <a href="#">Nav2</a>
-  <ul>
+  <ul class="list list-child">
     <li><a href="#">Nav2-1</a></li>
     <li><a href="#">Nav2-2</a></li>
   </ul>
   </li>
   <li>
   <a href="#">Nav3</a>
-  <ul>
+  <ul class="list list-child">
     <li><a href="#">Nav3-1</a></li>
     <li><a href="#">Nav3-2</a></li>
     <li><a href="#">Nav3-3</a></li>
@@ -47,7 +48,7 @@ $(function () {
   </li>
   <li>
   <a href="#">Nav4</a>
-  <ul>
+  <ul class="list list-child">
     <li><a href="#">Nav4-1</a></li>
     <li><a href="#">Nav4-2</a></li>
     <li><a href="#">Nav4-3</a></li>
@@ -55,8 +56,7 @@ $(function () {
   </ul>
   </li>
 </ul>
-<!--/.drilldown-container-->
-<!--/.nav-global--></nav>
+<!--/.nav-dropdown--></nav>
 
 	
 <!--/.main--></div>

@@ -2,17 +2,15 @@
 $.DropdownNav = Backbone.View.extend({
   el: 'li',
   initialize: function(options) {
-    var lazyUpdate;
     this.opt = {
-      transitionDuration: 0
+      transitionDuration: 0,
+      child: 'ul'
     };
     $.extend(this.opt, options);
     _.bindAll(this, 'update', 'handler', 'closeAll');
     setTimeout(this.update, 500);
-    lazyUpdate = _.debounce(this.update, 500);
-    $(window).on('resize orientationchange', lazyUpdate);
+    $(window).on('resize orientationchange', _.debounce(this.update, 500));
     this.opened = false;
-    return null;
   },
   update: function() {
     var self;
@@ -20,18 +18,18 @@ $.DropdownNav = Backbone.View.extend({
     return this.$el.each(function(i, el) {
       var $child, $el, $link;
       $el = $(el);
-      $child = $el.find('ul');
+      $child = $el.find(self.opt.child);
       if ($child[0] != null) {
         $child.css({
           height: '',
           visibility: 'hidden'
         });
-        el.childheight = $child.height();
+        $el.data('childheight', $child.height());
         $child.css({
           height: 0,
           visibility: 'visible'
         });
-        el.$child = $child;
+        $el.data('$child', $child);
       }
       $link = $el.find('>a');
       if ($link[0]) {
@@ -40,41 +38,42 @@ $.DropdownNav = Backbone.View.extend({
       } else {
         $el.on('click', self.handler);
       }
-      return null;
     });
   },
   handler: function(e) {
-    var target;
-    target = e.currentTarget;
-    if ($(target).data('container')) {
-      target = $(target).data('container');
+    var $child, $trigger, trigger;
+    trigger = e.currentTarget;
+    if ($(trigger).data('container')) {
+      trigger = $(trigger).data('container');
     }
-    if (target.$child == null) {
-      this.closeAll(target);
+    $trigger = $(trigger);
+    $child = $trigger.data('$child');
+    if ($child == null) {
+      this.closeAll(trigger);
       this.opened = false;
       return true;
     }
-    e.preventDefault();
-    this.closeAll(target).done(function() {
-      if (target.$child.hasClass('on')) {
-        return target.$child.removeClass('on').height(0);
+    this.closeAll(trigger).done(function() {
+      if ($child.hasClass('on')) {
+        return $child.removeClass('on').height(0);
       } else {
-        return target.$child.addClass('on').height(target.childheight);
+        return $child.addClass('on').height($trigger.data('childheight'));
       }
     });
     this.opened = true;
-    return null;
+    e.preventDefault();
   },
   closeAll: function(exclude) {
     var dfd;
     dfd = $.Deferred();
     this.$el.each(function(i, el) {
       var $child;
-      $child = $(el).find('ul');
-      if (el !== exclude && $child.hasClass('on')) {
-        $child.removeClass('on').height(0);
+      $child = $(el).data('$child');
+      if (el !== exclude) {
+        if (($child != null) && $child[0] && $child.hasClass('on')) {
+          $child.removeClass('on').height(0);
+        }
       }
-      return null;
     });
     if (this.opened === true) {
       setTimeout(dfd.resolve, this.opt.transitionDuration);

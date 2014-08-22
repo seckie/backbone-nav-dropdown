@@ -4,62 +4,68 @@ $.DropdownNav = Backbone.View.extend(
   initialize: (options) ->
     @opt = {
       transitionDuration: 0
+      child: 'ul'
     }
     $.extend(@opt, options)
     _.bindAll(this, 'update', 'handler', 'closeAll')
     setTimeout @update, 500
-    lazyUpdate = _.debounce(@update, 500)
-    $(window).on 'resize orientationchange', lazyUpdate
+    $(window).on 'resize orientationchange', _.debounce(@update, 500)
     @opened = false
-    null
+    return
 
   update: ->
-    self = this
+    self = @
     @$el.each (i, el) ->
       $el = $(el)
-      $child = $el.find('ul')
+      $child = $el.find(self.opt.child)
       if $child[0]?
         $child.css
           height: ''
           visibility: 'hidden'
-        el.childheight = $child.height() # save height
+        $el.data('childheight', $child.height()) # save height
         $child.css
           height: 0
           visibility: 'visible'
-        el.$child = $child
+        $el.data('$child', $child)
       $link = $el.find('>a')
       if $link[0]
-        $link.data 'container',  el
+        $link.data 'container', el
         $link.on 'click', self.handler
       else
         $el.on 'click', self.handler
-      null
+      return
 
   handler: (e) ->
-    target = e.currentTarget
-    if $(target).data('container') then target = $(target).data('container')
-    if !target.$child?
-      @closeAll(target)
+    trigger = e.currentTarget
+    if $(trigger).data('container')
+      trigger = $(trigger).data('container')
+    $trigger = $(trigger)
+    $child = $trigger.data('$child')
+    if !$child?
+      @closeAll(trigger)
       @opened = false
-      return true
-    e.preventDefault()
+      return true # default link
 
-    @closeAll(target).done ->
-      if target.$child.hasClass('on')
+    @closeAll(trigger).done ->
+      if $child.hasClass('on')
         # off
-        target.$child.removeClass('on').height(0)
+        $child.removeClass('on').height(0)
       else
         # on
-        target.$child.addClass('on').height(target.childheight)
+        $child.addClass('on')
+          .height($trigger.data('childheight'))
     @opened = true
-    null
+    e.preventDefault()
+    return
+
   closeAll: (exclude) ->
     dfd = $.Deferred()
     @$el.each (i, el) ->
-      $child = $(el).find('ul')
-      if el isnt exclude and $child.hasClass('on')
-        $child.removeClass('on').height(0)
-      null
+      $child = $(el).data('$child')
+      if el isnt exclude
+        if $child? and $child[0] and $child.hasClass('on')
+          $child.removeClass('on').height(0)
+      return
     if @opened is true
       setTimeout dfd.resolve, @opt.transitionDuration
     else

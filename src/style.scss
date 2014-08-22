@@ -49,65 +49,53 @@ a {
 
 .nav-dropdown {
   width: 100%;
-  ul {
+}
+.list {
+  position: relative;
+  background-color: #fff;
+  @include clearfix;
+  font-size: 18px;
+  line-height: 24px;
+  >li {
     position: relative;
-    background-color: #fff;
-    @include clearfix;
-    font-size: 18px;
-    line-height: 24px;
-    >li {
-      position: relative;
-      float: left;
-      width: 25%;
-      a {
-        display: block;
-        padding: 15px 0;
-        border-right: 1px solid $bgcolor;
-        color: #333;
-        text-align: center;
-        text-decoration: none;
+    float: left;
+    width: 25%;
+    a {
+      display: block;
+      padding: 15px 0;
+      border-right: 1px solid $bgcolor;
+      color: #333;
+      text-align: center;
+      text-decoration: none;
+    }
+    .list-child {
+      width: 400%;
+    }
+    &:nth-child(2) {
+      .list-child {
+        margin-left: -100%;
       }
-      ul {
-        visibility: hidden;
-        width: 400%;
-        overflow: hidden;
-        background-color: #f3f3ff;
-        font-size: 14px;
-        line-height: 24px;
-        @include single-transition(height, 250ms);
+    }
+    &:nth-child(3) {
+      .list-child {
+        margin-left: -200%;
       }
-      &:nth-child(2) {
-        ul {
-          margin-left: -100%;
-        }
-      }
-      &:nth-child(3) {
-        ul {
-          margin-left: -200%;
-        }
-      }
-      &:nth-child(4) {
-        ul {
-          margin-left: -300%;
-        }
+    }
+    &:nth-child(4) {
+      .list-child {
+        margin-left: -300%;
       }
     }
   }
 }
-//     width: $width1;
-//     min-height: $height1;
-//     background-color: #fff;
+.list-child {
+  visibility: hidden;
+  overflow: hidden;
+  background-color: #f3f3ff;
+  font-size: 14px;
+  line-height: 24px;
+  @include single-transition(height, 250ms);
+}
+// .child2 {
+//   margin-left: -25%;
 // }
-//             background-color: #666;
-//             line-height: 50px;
-//             color: #fff;
-//             background-color: $linkcolor;
-//                 background-color: $hoverlinkcolor;
-//                 background-color: #ff9900;
-// #slide2 {
-//     background-color: #eee;
-// }
-// #slide4 {
-//     background-color: #eee;
-// }
-
