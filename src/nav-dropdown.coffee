@@ -18,13 +18,13 @@
         activeClass: 'on'
       }
       $.extend(@opt, options)
-      _.bindAll(this, 'update', 'handler', 'closeAll')
-      setTimeout @update, 500
+      _.bindAll(@, 'render', 'update', 'handler', 'closeAll')
+      setTimeout @render, 500
       $(window).on 'resize orientationchange', _.debounce(@update, 500)
       @opened = false
       return
 
-    update: ->
+    render: ->
       self = @
       errorMsg = '$.NavDropdown: child element not found'
       @$el.each (i, el) ->
@@ -48,6 +48,15 @@
           $child = $el.find(self.opt.child)
 
         if $child[0]?
+          $el.data('$child', $child)
+        return
+      @update()
+      
+    update: ->
+      @$el.each (i, el) ->
+        $el = $(el)
+        $child = $el.data('$child')
+        if $child?[0]?
           $child.css
             height: ''
             visibility: 'hidden'

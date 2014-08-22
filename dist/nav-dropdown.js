@@ -17,16 +17,16 @@
         activeClass: 'on'
       };
       $.extend(this.opt, options);
-      _.bindAll(this, 'update', 'handler', 'closeAll');
-      setTimeout(this.update, 500);
+      _.bindAll(this, 'render', 'update', 'handler', 'closeAll');
+      setTimeout(this.render, 500);
       $(window).on('resize orientationchange', _.debounce(this.update, 500));
       this.opened = false;
     },
-    update: function() {
+    render: function() {
       var errorMsg, self;
       self = this;
       errorMsg = '$.NavDropdown: child element not found';
-      return this.$el.each(function(i, el) {
+      this.$el.each(function(i, el) {
         var $child, $el, $link;
         $el = $(el);
         $link = $el.find('>a');
@@ -50,6 +50,17 @@
           $child = $el.find(self.opt.child);
         }
         if ($child[0] != null) {
+          $el.data('$child', $child);
+        }
+      });
+      return this.update();
+    },
+    update: function() {
+      return this.$el.each(function(i, el) {
+        var $child, $el;
+        $el = $(el);
+        $child = $el.data('$child');
+        if (($child != null ? $child[0] : void 0) != null) {
           $child.css({
             height: '',
             visibility: 'hidden'
