@@ -12,7 +12,7 @@
     el: 'li',
     initialize: function(options) {
       this.opt = {
-        transitionDuration: 0,
+        transitionDuration: 250,
         child: 'ul'
       };
       $.extend(this.opt, options);

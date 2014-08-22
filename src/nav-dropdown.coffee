@@ -13,7 +13,7 @@
     el: 'li'
     initialize: (options) ->
       @opt = {
-        transitionDuration: 0
+        transitionDuration: 250
         child: 'ul'
       }
       $.extend(@opt, options)
