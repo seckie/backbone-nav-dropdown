@@ -53,6 +53,7 @@
       @update()
       
     update: ->
+      self = @
       @$el.each (i, el) ->
         $el = $(el)
         $child = $el.data('$child')
@@ -66,6 +67,10 @@
             visibility: 'visible'
           $el.data('$child', $child)
         return
+      if self.current
+        self.closeAll().done () ->
+          self.open(self.current)
+      return
 
     handler: (e) ->
       trigger = e.currentTarget
@@ -96,6 +101,7 @@
           $trigger.addClass(self.opt.activeClass)
           $child.height($trigger.data('childheight'))
       @opened = true
+      @current = trigger
       return
 
     closeAll: (exclude) ->

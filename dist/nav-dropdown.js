@@ -56,7 +56,9 @@
       return this.update();
     },
     update: function() {
-      return this.$el.each(function(i, el) {
+      var self;
+      self = this;
+      this.$el.each(function(i, el) {
         var $child, $el;
         $el = $(el);
         $child = $el.data('$child');
@@ -73,6 +75,11 @@
           $el.data('$child', $child);
         }
       });
+      if (self.current) {
+        self.closeAll().done(function() {
+          return self.open(self.current);
+        });
+      }
     },
     handler: function(e) {
       var trigger;
@@ -104,6 +111,7 @@
         }
       });
       this.opened = true;
+      this.current = trigger;
     },
     closeAll: function(exclude) {
       var dfd, self;
