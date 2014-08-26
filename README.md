@@ -60,7 +60,7 @@ var nav = new $.NavDropdown({
 <td>activeClass</td>
 <td>'on'</td>
 <td>String</td>
-<td>It'll be added to active element</td>
+<td>It'll be added to active element.</td>
 </tr>
 </tbody>
 </table>
