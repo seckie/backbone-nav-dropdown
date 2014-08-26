@@ -17,6 +17,9 @@ $(function () {
     transitionDuration: 250,
     child: 'ul'
   })
+  nav.on('change', function (trigger) {
+    console.log('changed! trigger element is... ', trigger)
+  });
 });
 </script>
 </head>

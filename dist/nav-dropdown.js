@@ -98,6 +98,7 @@
         }
       });
       this.opened = true;
+      this.trigger('change', trigger);
       e.preventDefault();
     },
     closeAll: function(exclude) {

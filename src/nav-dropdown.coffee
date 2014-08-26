@@ -89,6 +89,8 @@
           $trigger.addClass(self.opt.activeClass)
           $child.height($trigger.data('childheight'))
       @opened = true
+
+      @trigger('change', trigger) # event
       e.preventDefault()
       return
 
