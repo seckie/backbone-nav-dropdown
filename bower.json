@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": { },
   "private": true,
-  "main": "./dist/nav-dropdown.js"
+  "main": "./dist/nav-dropdown.js",
   "ignore": [
     "node_modules",
     "bower_components",
@@ -14,7 +14,7 @@
     "bower.json",
     ".jshintrc",
     ".gitignore"
-  ]
+  ],
   "devDependencies": {
     "jquery": "~2.1.0",
     "underscore": "~1.6.0",
