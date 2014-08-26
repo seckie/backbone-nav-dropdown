@@ -18,7 +18,7 @@
         activeClass: 'on'
       }
       $.extend(@opt, options)
-      _.bindAll(@, 'render', 'update', 'handler', 'closeAll')
+      _.bindAll(@, 'render', 'update', 'handler', 'open', 'closeAll')
       setTimeout @render, 500
       $(window).on 'resize orientationchange', _.debounce(@update, 500)
       @opened = false
@@ -68,10 +68,17 @@
         return
 
     handler: (e) ->
-      self = @
       trigger = e.currentTarget
       if $(trigger).data('container')
         trigger = $(trigger).data('container')
+      @open(trigger)
+
+      @trigger('change', trigger) # event
+      e.preventDefault()
+      return
+
+    open: (trigger) ->
+      self = @
       $trigger = $(trigger)
       $child = $trigger.data('$child')
       if !$child?
@@ -89,9 +96,6 @@
           $trigger.addClass(self.opt.activeClass)
           $child.height($trigger.data('childheight'))
       @opened = true
-
-      @trigger('change', trigger) # event
-      e.preventDefault()
       return
 
     closeAll: (exclude) ->

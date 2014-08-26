@@ -17,7 +17,7 @@
         activeClass: 'on'
       };
       $.extend(this.opt, options);
-      _.bindAll(this, 'render', 'update', 'handler', 'closeAll');
+      _.bindAll(this, 'render', 'update', 'handler', 'open', 'closeAll');
       setTimeout(this.render, 500);
       $(window).on('resize orientationchange', _.debounce(this.update, 500));
       this.opened = false;
@@ -75,12 +75,18 @@
       });
     },
     handler: function(e) {
-      var $child, $trigger, self, trigger;
-      self = this;
+      var trigger;
       trigger = e.currentTarget;
       if ($(trigger).data('container')) {
         trigger = $(trigger).data('container');
       }
+      this.open(trigger);
+      this.trigger('change', trigger);
+      e.preventDefault();
+    },
+    open: function(trigger) {
+      var $child, $trigger, self;
+      self = this;
       $trigger = $(trigger);
       $child = $trigger.data('$child');
       if ($child == null) {
@@ -98,8 +104,6 @@
         }
       });
       this.opened = true;
-      this.trigger('change', trigger);
-      e.preventDefault();
     },
     closeAll: function(exclude) {
       var dfd, self;
