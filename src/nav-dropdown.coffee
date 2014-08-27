@@ -89,7 +89,7 @@
       $child = $trigger.data('$child')
       end = ($el) ->
         setTimeout(() ->
-          $el.removeClass(self.opt.transitionClass)
+          $el.removeClass(self.opt.transitionClass).height('')
           self.blocking = false
           return
         , self.opt.transitionDuration)
