@@ -13,6 +13,7 @@
     initialize: function(options) {
       this.opt = {
         transitionDuration: 250,
+        transitionClass: 'trans',
         child: 'ul',
         activeClass: 'on'
       };
@@ -92,10 +93,15 @@
       e.preventDefault();
     },
     open: function(trigger) {
-      var $child, $trigger, self;
+      var $child, $trigger, end, self;
       self = this;
       $trigger = $(trigger);
       $child = $trigger.data('$child');
+      end = function($el) {
+        return setTimeout(function() {
+          return $el.removeClass(self.opt.transitionClass);
+        }, self.opt.transitionDuration);
+      };
       if ($child == null) {
         this.closeAll(trigger);
         this.opened = false;
@@ -104,10 +110,11 @@
       this.closeAll(trigger).done(function() {
         if ($trigger.hasClass(self.opt.activeClass)) {
           $trigger.removeClass(self.opt.activeClass);
-          return $child.height(0);
+          return $child.removeClass(self.opt.transitionClass).height(0);
         } else {
           $trigger.addClass(self.opt.activeClass);
-          return $child.height($trigger.data('childheight'));
+          $child.addClass(self.opt.transitionClass).height($trigger.data('childheight'));
+          return end($child);
         }
       });
       this.opened = true;
@@ -124,12 +131,21 @@
         if (el !== exclude) {
           if (($child != null) && $child[0] && $el.hasClass(self.opt.activeClass)) {
             $el.removeClass(self.opt.activeClass);
-            $child.height(0);
+            $child.addClass(self.opt.transitionClass).height(0);
           }
         }
       });
       if (this.opened === true) {
-        setTimeout(dfd.resolve, this.opt.transitionDuration);
+        setTimeout(function() {
+          self.$el.each(function(i, el) {
+            var $child;
+            $child = $(el).data('$child');
+            if ($child != null) {
+              return $child.removeClass(self.opt.transitionClass);
+            }
+          });
+          return dfd.resolve();
+        }, this.opt.transitionDuration);
       } else {
         dfd.resolve();
       }

@@ -14,6 +14,7 @@
     initialize: (options) ->
       @opt = {
         transitionDuration: 250
+        transitionClass: 'trans'
         child: 'ul'
         activeClass: 'on'
       }
@@ -86,20 +87,29 @@
       self = @
       $trigger = $(trigger)
       $child = $trigger.data('$child')
+      end = ($el) ->
+        setTimeout(() ->
+          $el.removeClass(self.opt.transitionClass)
+        , self.opt.transitionDuration)
+
       if !$child?
         @closeAll(trigger)
         @opened = false
         return true # default link
 
       @closeAll(trigger).done ->
+          
         if $trigger.hasClass(self.opt.activeClass)
           # off
           $trigger.removeClass(self.opt.activeClass)
-          $child.height(0)
+          $child.removeClass(self.opt.transitionClass)
+            .height(0)
         else
           # on
           $trigger.addClass(self.opt.activeClass)
-          $child.height($trigger.data('childheight'))
+          $child.addClass(self.opt.transitionClass)
+            .height($trigger.data('childheight'))
+          end($child)
       @opened = true
       @current = trigger
       return
@@ -113,10 +123,17 @@
         if el isnt exclude
           if $child? and $child[0] and $el.hasClass(self.opt.activeClass)
             $el.removeClass(self.opt.activeClass)
-            $child.height(0)
+            $child.addClass(self.opt.transitionClass)
+              .height(0)
         return
       if @opened is true
-        setTimeout dfd.resolve, @opt.transitionDuration
+        setTimeout(() ->
+          self.$el.each((i, el) ->
+            $child = $(el).data('$child')
+            $child.removeClass(self.opt.transitionClass) if $child?
+          )
+          dfd.resolve()
+        , @opt.transitionDuration)
       else
         dfd.resolve()
       dfd.promise()
