@@ -99,9 +99,13 @@
       $child = $trigger.data('$child');
       end = function($el) {
         return setTimeout(function() {
-          return $el.removeClass(self.opt.transitionClass);
+          $el.removeClass(self.opt.transitionClass);
+          self.blocking = false;
         }, self.opt.transitionDuration);
       };
+      if (this.blocking === true) {
+        return;
+      }
       if ($child == null) {
         this.closeAll(trigger);
         this.opened = false;
@@ -110,11 +114,12 @@
       this.closeAll(trigger).done(function() {
         if ($trigger.hasClass(self.opt.activeClass)) {
           $trigger.removeClass(self.opt.activeClass);
-          return $child.removeClass(self.opt.transitionClass).height(0);
+          $child.addClass(self.opt.transitionClass).height(0);
+          end($child);
         } else {
           $trigger.addClass(self.opt.activeClass);
           $child.addClass(self.opt.transitionClass).height($trigger.data('childheight'));
-          return end($child);
+          end($child);
         }
       });
       this.opened = true;
@@ -124,6 +129,10 @@
       var dfd, self;
       self = this;
       dfd = $.Deferred();
+      if (this.blocking === true) {
+        return;
+      }
+      this.blocking = true;
       this.$el.each(function(i, el) {
         var $child, $el;
         $el = $(el);
@@ -137,17 +146,13 @@
       });
       if (this.opened === true) {
         setTimeout(function() {
-          self.$el.each(function(i, el) {
-            var $child;
-            $child = $(el).data('$child');
-            if ($child != null) {
-              return $child.removeClass(self.opt.transitionClass);
-            }
-          });
           return dfd.resolve();
         }, this.opt.transitionDuration);
       } else {
-        dfd.resolve();
+        setTimeout(function() {
+          self.blocking = false;
+          return dfd.resolve();
+        }, this.opt.transitionDuration);
       }
       return dfd.promise();
     }

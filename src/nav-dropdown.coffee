@@ -90,8 +90,12 @@
       end = ($el) ->
         setTimeout(() ->
           $el.removeClass(self.opt.transitionClass)
+          self.blocking = false
+          return
         , self.opt.transitionDuration)
 
+      if @blocking is true
+        return
       if !$child?
         @closeAll(trigger)
         @opened = false
@@ -102,14 +106,16 @@
         if $trigger.hasClass(self.opt.activeClass)
           # off
           $trigger.removeClass(self.opt.activeClass)
-          $child.removeClass(self.opt.transitionClass)
+          $child.addClass(self.opt.transitionClass)
             .height(0)
+          end($child)
         else
           # on
           $trigger.addClass(self.opt.activeClass)
           $child.addClass(self.opt.transitionClass)
             .height($trigger.data('childheight'))
           end($child)
+        return
       @opened = true
       @current = trigger
       return
@@ -117,6 +123,9 @@
     closeAll: (exclude) ->
       self = @
       dfd = $.Deferred()
+      if @blocking is true
+        return
+      @blocking = true
       @$el.each (i, el) ->
         $el = $(el)
         $child = $el.data('$child')
@@ -128,14 +137,17 @@
         return
       if @opened is true
         setTimeout(() ->
-          self.$el.each((i, el) ->
-            $child = $(el).data('$child')
-            $child.removeClass(self.opt.transitionClass) if $child?
-          )
+#           self.$el.each((i, el) ->
+#             $child = $(el).data('$child')
+#             $child.removeClass(self.opt.transitionClass) if $child?
+#           )
           dfd.resolve()
         , @opt.transitionDuration)
       else
-        dfd.resolve()
+        setTimeout(() ->
+          self.blocking = false
+          dfd.resolve()
+        , @opt.transitionDuration)
       dfd.promise()
   )
 
