@@ -21,7 +21,6 @@
       _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'end', 'closeAll');
       setTimeout(this.render, 500);
       $(window).on('resize orientationchange', _.debounce(this.update, 500));
-      this.opened = false;
     },
     render: function() {
       var errorMsg, self;
@@ -97,7 +96,6 @@
       }
       if ($child == null) {
         this.closeAll(trigger);
-        this.opened = false;
         return true;
       } else {
         this.closeAll(trigger).done(function() {
@@ -119,7 +117,6 @@
       $trigger.addClass(self.opt.activeClass);
       $child.addClass(self.opt.transitionClass).height($trigger.data('childheight'));
       this.end($child);
-      this.opened = true;
       this.current = trigger;
     },
     close: function(trigger) {
@@ -130,7 +127,6 @@
       $trigger.removeClass(self.opt.activeClass);
       $child.addClass(self.opt.transitionClass).height(0);
       this.end($child);
-      this.opened = false;
       this.current = trigger;
     },
     end: function($el) {
@@ -160,16 +156,10 @@
           }
         }
       });
-      if (this.opened === true) {
-        setTimeout(function() {
-          return dfd.resolve();
-        }, this.opt.transitionDuration);
-      } else {
-        setTimeout(function() {
-          self.blocking = false;
-          return dfd.resolve();
-        }, this.opt.transitionDuration);
-      }
+      setTimeout(function() {
+        self.blocking = false;
+        return dfd.resolve();
+      }, this.opt.transitionDuration);
       return dfd.promise();
     }
   });

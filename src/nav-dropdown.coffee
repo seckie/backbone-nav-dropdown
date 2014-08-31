@@ -23,7 +23,6 @@
         'open', 'close', 'end', 'closeAll')
       setTimeout @render, 500
       $(window).on 'resize orientationchange', _.debounce(@update, 500)
-      @opened = false
       return
 
     render: ->
@@ -81,7 +80,6 @@
       if $(trigger).data('container')
         trigger = $(trigger).data('container')
         $trigger = $(trigger)
-      #@open(trigger)
 
       # from @open ----------
       $child = $(trigger).data('$child')
@@ -89,7 +87,6 @@
         return
       if !$child?
         @closeAll(trigger)
-        @opened = false
         return true # default link
       else
         @closeAll(trigger).done(() ->
@@ -114,7 +111,6 @@
         .height($trigger.data('childheight'))
       @end($child)
 
-      @opened = true
       @current = trigger
       return
 
@@ -128,7 +124,6 @@
         .height(0)
       @end($child)
 
-      @opened = false
       @current = trigger
       return
     
@@ -155,19 +150,10 @@
             $child.addClass(self.opt.transitionClass)
               .height(0)
         return
-      if @opened is true
-        setTimeout(() ->
-#           self.$el.each((i, el) ->
-#             $child = $(el).data('$child')
-#             $child.removeClass(self.opt.transitionClass) if $child?
-#           )
-          dfd.resolve()
-        , @opt.transitionDuration)
-      else
-        setTimeout(() ->
-          self.blocking = false
-          dfd.resolve()
-        , @opt.transitionDuration)
+      setTimeout(() ->
+        self.blocking = false
+        dfd.resolve()
+      , @opt.transitionDuration)
       dfd.promise()
   )
 
