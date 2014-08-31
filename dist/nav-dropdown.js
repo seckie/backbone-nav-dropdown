@@ -18,7 +18,7 @@
         activeClass: 'on'
       };
       $.extend(this.opt, options);
-      _.bindAll(this, 'render', 'update', 'handler', 'open', 'closeAll');
+      _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'closeAll');
       setTimeout(this.render, 500);
       $(window).on('resize orientationchange', _.debounce(this.update, 500));
       this.opened = false;
@@ -83,12 +83,31 @@
       }
     },
     handler: function(e) {
-      var trigger;
+      var $child, $trigger, self, trigger;
+      self = this;
       trigger = e.currentTarget;
+      $trigger = $(trigger);
       if ($(trigger).data('container')) {
         trigger = $(trigger).data('container');
+        $trigger = $(trigger);
       }
-      this.open(trigger);
+      $child = $(trigger).data('$child');
+      if (this.blocking === true) {
+        return;
+      }
+      if ($child == null) {
+        this.closeAll(trigger);
+        this.opened = false;
+        return true;
+      } else {
+        this.closeAll(trigger).done(function() {
+          if ($trigger.hasClass(self.opt.activeClass)) {
+            return self.close(trigger);
+          } else {
+            return self.open(trigger);
+          }
+        });
+      }
       this.trigger('change', trigger);
       e.preventDefault();
     },
@@ -103,26 +122,27 @@
           self.blocking = false;
         }, self.opt.transitionDuration);
       };
-      if (this.blocking === true) {
-        return;
-      }
-      if ($child == null) {
-        this.closeAll(trigger);
-        this.opened = false;
-        return true;
-      }
-      this.closeAll(trigger).done(function() {
-        if ($trigger.hasClass(self.opt.activeClass)) {
-          $trigger.removeClass(self.opt.activeClass);
-          $child.addClass(self.opt.transitionClass).height(0);
-          end($child);
-        } else {
-          $trigger.addClass(self.opt.activeClass);
-          $child.addClass(self.opt.transitionClass).height($trigger.data('childheight'));
-          end($child);
-        }
-      });
+      $trigger.addClass(self.opt.activeClass);
+      $child.addClass(self.opt.transitionClass).height($trigger.data('childheight'));
+      end($child);
       this.opened = true;
+      this.current = trigger;
+    },
+    close: function(trigger) {
+      var $child, $trigger, end, self;
+      self = this;
+      $trigger = $(trigger);
+      $child = $trigger.data('$child');
+      end = function($el) {
+        return setTimeout(function() {
+          $el.removeClass(self.opt.transitionClass);
+          self.blocking = false;
+        }, self.opt.transitionDuration);
+      };
+      $trigger.removeClass(self.opt.activeClass);
+      $child.addClass(self.opt.transitionClass).height(0);
+      end($child);
+      this.opened = false;
       this.current = trigger;
     },
     closeAll: function(exclude) {

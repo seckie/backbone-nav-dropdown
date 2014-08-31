@@ -19,7 +19,7 @@
         activeClass: 'on'
       }
       $.extend(@opt, options)
-      _.bindAll(@, 'render', 'update', 'handler', 'open', 'closeAll')
+      _.bindAll(@, 'render', 'update', 'handler', 'open', 'close', 'closeAll')
       setTimeout @render, 500
       $(window).on 'resize orientationchange', _.debounce(@update, 500)
       @opened = false
@@ -74,10 +74,30 @@
       return
 
     handler: (e) ->
+      self = @
       trigger = e.currentTarget
+      $trigger = $(trigger)
       if $(trigger).data('container')
         trigger = $(trigger).data('container')
-      @open(trigger)
+        $trigger = $(trigger)
+      #@open(trigger)
+
+      # from @open ----------
+      $child = $(trigger).data('$child')
+      if @blocking is true
+        return
+      if !$child?
+        @closeAll(trigger)
+        @opened = false
+        return true # default link
+      else
+        @closeAll(trigger).done(() ->
+          if $trigger.hasClass(self.opt.activeClass)
+            self.close(trigger)
+          else
+            self.open(trigger)
+        )
+      # from @open ----------
 
       @trigger('change', trigger) # event
       e.preventDefault()
@@ -89,36 +109,40 @@
       $child = $trigger.data('$child')
       end = ($el) ->
         setTimeout(() ->
-          $el.removeClass(self.opt.transitionClass).height('')
+          $el.removeClass(self.opt.transitionClass)#.height('')
           self.blocking = false
           return
         , self.opt.transitionDuration)
 
-      if @blocking is true
-        return
-      if !$child?
-        @closeAll(trigger)
-        @opened = false
-        return true # default link
+      $trigger.addClass(self.opt.activeClass)
+      $child.addClass(self.opt.transitionClass)
+        .height($trigger.data('childheight'))
+      end($child)
 
-      @closeAll(trigger).done ->
-          
-        if $trigger.hasClass(self.opt.activeClass)
-          # off
-          $trigger.removeClass(self.opt.activeClass)
-          $child.addClass(self.opt.transitionClass)
-            .height(0)
-          end($child)
-        else
-          # on
-          $trigger.addClass(self.opt.activeClass)
-          $child.addClass(self.opt.transitionClass)
-            .height($trigger.data('childheight'))
-          end($child)
-        return
       @opened = true
       @current = trigger
       return
+
+    close: (trigger) ->
+      self = @
+      $trigger = $(trigger)
+      $child = $trigger.data('$child')
+      end = ($el) ->
+        setTimeout(() ->
+          $el.removeClass(self.opt.transitionClass)#.height('')
+          self.blocking = false
+          return
+        , self.opt.transitionDuration)
+
+      $trigger.removeClass(self.opt.activeClass)
+      $child.addClass(self.opt.transitionClass)
+        .height(0)
+        end($child)
+
+      @opened = false
+      @current = trigger
+      return
+    
 
     closeAll: (exclude) ->
       self = @
