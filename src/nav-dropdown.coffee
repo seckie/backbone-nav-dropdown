@@ -19,7 +19,8 @@
         activeClass: 'on'
       }
       $.extend(@opt, options)
-      _.bindAll(@, 'render', 'update', 'handler', 'open', 'close', 'closeAll')
+      _.bindAll(@, 'render', 'update', 'handler',
+        'open', 'close', 'end', 'closeAll')
       setTimeout @render, 500
       $(window).on 'resize orientationchange', _.debounce(@update, 500)
       @opened = false
@@ -107,17 +108,11 @@
       self = @
       $trigger = $(trigger)
       $child = $trigger.data('$child')
-      end = ($el) ->
-        setTimeout(() ->
-          $el.removeClass(self.opt.transitionClass)#.height('')
-          self.blocking = false
-          return
-        , self.opt.transitionDuration)
 
       $trigger.addClass(self.opt.activeClass)
       $child.addClass(self.opt.transitionClass)
         .height($trigger.data('childheight'))
-      end($child)
+      @end($child)
 
       @opened = true
       @current = trigger
@@ -127,22 +122,23 @@
       self = @
       $trigger = $(trigger)
       $child = $trigger.data('$child')
-      end = ($el) ->
-        setTimeout(() ->
-          $el.removeClass(self.opt.transitionClass)#.height('')
-          self.blocking = false
-          return
-        , self.opt.transitionDuration)
 
       $trigger.removeClass(self.opt.activeClass)
       $child.addClass(self.opt.transitionClass)
         .height(0)
-        end($child)
+      @end($child)
 
       @opened = false
       @current = trigger
       return
     
+    end: ($el) ->
+      self = @
+      setTimeout(() ->
+        $el.removeClass(self.opt.transitionClass)#.height('')
+        self.blocking = false
+        return
+      , self.opt.transitionDuration)
 
     closeAll: (exclude) ->
       self = @

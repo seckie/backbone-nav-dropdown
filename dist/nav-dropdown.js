@@ -18,7 +18,7 @@
         activeClass: 'on'
       };
       $.extend(this.opt, options);
-      _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'closeAll');
+      _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'end', 'closeAll');
       setTimeout(this.render, 500);
       $(window).on('resize orientationchange', _.debounce(this.update, 500));
       this.opened = false;
@@ -112,38 +112,34 @@
       e.preventDefault();
     },
     open: function(trigger) {
-      var $child, $trigger, end, self;
+      var $child, $trigger, self;
       self = this;
       $trigger = $(trigger);
       $child = $trigger.data('$child');
-      end = function($el) {
-        return setTimeout(function() {
-          $el.removeClass(self.opt.transitionClass);
-          self.blocking = false;
-        }, self.opt.transitionDuration);
-      };
       $trigger.addClass(self.opt.activeClass);
       $child.addClass(self.opt.transitionClass).height($trigger.data('childheight'));
-      end($child);
+      this.end($child);
       this.opened = true;
       this.current = trigger;
     },
     close: function(trigger) {
-      var $child, $trigger, end, self;
+      var $child, $trigger, self;
       self = this;
       $trigger = $(trigger);
       $child = $trigger.data('$child');
-      end = function($el) {
-        return setTimeout(function() {
-          $el.removeClass(self.opt.transitionClass);
-          self.blocking = false;
-        }, self.opt.transitionDuration);
-      };
       $trigger.removeClass(self.opt.activeClass);
       $child.addClass(self.opt.transitionClass).height(0);
-      end($child);
+      this.end($child);
       this.opened = false;
       this.current = trigger;
+    },
+    end: function($el) {
+      var self;
+      self = this;
+      return setTimeout(function() {
+        $el.removeClass(self.opt.transitionClass);
+        self.blocking = false;
+      }, self.opt.transitionDuration);
     },
     closeAll: function(exclude) {
       var dfd, self;
