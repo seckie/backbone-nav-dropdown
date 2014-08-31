@@ -70,6 +70,7 @@
         return
       if self.current
         self.closeAll().done () ->
+          self.blocking = false
           self.open(self.current)
       return
 
@@ -82,18 +83,19 @@
         $trigger = $(trigger)
 
       # from @open ----------
-      $child = $(trigger).data('$child')
+      $child = $trigger.data('$child')
       if @blocking is true
         return
       if !$child?
         @closeAll(trigger)
+        @blocking = false
         return true # default link
       else
         @closeAll(trigger).done(() ->
           if $trigger.hasClass(self.opt.activeClass)
-            self.close(trigger)
+            self.close(trigger, $child)
           else
-            self.open(trigger)
+            self.open(trigger, $child)
         )
       # from @open ----------
 
@@ -101,10 +103,10 @@
       e.preventDefault()
       return
 
-    open: (trigger) ->
+    open: (trigger, $child) ->
       self = @
       $trigger = $(trigger)
-      $child = $trigger.data('$child')
+      $child = $child ? $trigger.data('$child')
 
       $trigger.addClass(self.opt.activeClass)
       $child.addClass(self.opt.transitionClass)
@@ -114,10 +116,10 @@
       @current = trigger
       return
 
-    close: (trigger) ->
+    close: (trigger, $child) ->
       self = @
       $trigger = $(trigger)
-      $child = $trigger.data('$child')
+      $child = $child ? $trigger.data('$child')
 
       $trigger.removeClass(self.opt.activeClass)
       $child.addClass(self.opt.transitionClass)
@@ -133,7 +135,7 @@
         $el.removeClass(self.opt.transitionClass)#.height('')
         self.blocking = false
         return
-      , self.opt.transitionDuration)
+      , @opt.transitionDuration)
 
     closeAll: (exclude) ->
       self = @
@@ -144,16 +146,14 @@
       @$el.each (i, el) ->
         $el = $(el)
         $child = $el.data('$child')
-        if el isnt exclude
-          if $child? and $child[0] and $el.hasClass(self.opt.activeClass)
-            $el.removeClass(self.opt.activeClass)
-            $child.addClass(self.opt.transitionClass)
-              .height(0)
+        if el is exclude
+          return
+        if $child? and $el.hasClass(self.opt.activeClass)
+          $el.removeClass(self.opt.activeClass)
+          $child.addClass(self.opt.transitionClass)
+            .height(0)
         return
-      setTimeout(() ->
-        self.blocking = false
-        dfd.resolve()
-      , @opt.transitionDuration)
+      setTimeout(dfd.resolve, @opt.transitionDuration)
       dfd.promise()
   )
 

@@ -77,6 +77,7 @@
       });
       if (self.current) {
         self.closeAll().done(function() {
+          self.blocking = false;
           return self.open(self.current);
         });
       }
@@ -90,40 +91,41 @@
         trigger = $(trigger).data('container');
         $trigger = $(trigger);
       }
-      $child = $(trigger).data('$child');
+      $child = $trigger.data('$child');
       if (this.blocking === true) {
         return;
       }
       if ($child == null) {
         this.closeAll(trigger);
+        this.blocking = false;
         return true;
       } else {
         this.closeAll(trigger).done(function() {
           if ($trigger.hasClass(self.opt.activeClass)) {
-            return self.close(trigger);
+            return self.close(trigger, $child);
           } else {
-            return self.open(trigger);
+            return self.open(trigger, $child);
           }
         });
       }
       this.trigger('change', trigger);
       e.preventDefault();
     },
-    open: function(trigger) {
-      var $child, $trigger, self;
+    open: function(trigger, $child) {
+      var $trigger, self;
       self = this;
       $trigger = $(trigger);
-      $child = $trigger.data('$child');
+      $child = $child != null ? $child : $trigger.data('$child');
       $trigger.addClass(self.opt.activeClass);
       $child.addClass(self.opt.transitionClass).height($trigger.data('childheight'));
       this.end($child);
       this.current = trigger;
     },
-    close: function(trigger) {
-      var $child, $trigger, self;
+    close: function(trigger, $child) {
+      var $trigger, self;
       self = this;
       $trigger = $(trigger);
-      $child = $trigger.data('$child');
+      $child = $child != null ? $child : $trigger.data('$child');
       $trigger.removeClass(self.opt.activeClass);
       $child.addClass(self.opt.transitionClass).height(0);
       this.end($child);
@@ -135,7 +137,7 @@
       return setTimeout(function() {
         $el.removeClass(self.opt.transitionClass);
         self.blocking = false;
-      }, self.opt.transitionDuration);
+      }, this.opt.transitionDuration);
     },
     closeAll: function(exclude) {
       var dfd, self;
@@ -149,17 +151,15 @@
         var $child, $el;
         $el = $(el);
         $child = $el.data('$child');
-        if (el !== exclude) {
-          if (($child != null) && $child[0] && $el.hasClass(self.opt.activeClass)) {
-            $el.removeClass(self.opt.activeClass);
-            $child.addClass(self.opt.transitionClass).height(0);
-          }
+        if (el === exclude) {
+          return;
+        }
+        if (($child != null) && $el.hasClass(self.opt.activeClass)) {
+          $el.removeClass(self.opt.activeClass);
+          $child.addClass(self.opt.transitionClass).height(0);
         }
       });
-      setTimeout(function() {
-        self.blocking = false;
-        return dfd.resolve();
-      }, this.opt.transitionDuration);
+      setTimeout(dfd.resolve, this.opt.transitionDuration);
       return dfd.promise();
     }
   });
