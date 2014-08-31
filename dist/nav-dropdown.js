@@ -17,15 +17,15 @@
         child: 'ul',
         activeClass: 'on'
       };
+      this.ERRORMSG1 = '$.NavDropdown: child element not found';
       $.extend(this.opt, options);
       _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'end', 'closeAll');
       setTimeout(this.render, 500);
       $(window).on('resize orientationchange', _.debounce(this.update, 500));
     },
     render: function() {
-      var errorMsg, self;
+      var self;
       self = this;
-      errorMsg = '$.NavDropdown: child element not found';
       this.$el.each(function(i, el) {
         var $child, $el, $link;
         $el = $(el);
@@ -43,7 +43,7 @@
               return;
             }
           } else {
-            console.error(errorMsg);
+            console.error(self.ERRORMSG1);
             return;
           }
         } else {

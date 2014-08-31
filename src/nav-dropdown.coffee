@@ -18,34 +18,34 @@
         child: 'ul'
         activeClass: 'on'
       }
+      @ERRORMSG1 = '$.NavDropdown: child element not found'
       $.extend(@opt, options)
       _.bindAll(@, 'render', 'update', 'handler',
         'open', 'close', 'end', 'closeAll')
-      setTimeout @render, 500
-      $(window).on 'resize orientationchange', _.debounce(@update, 500)
+      setTimeout(@render, 500)
+      $(window).on('resize orientationchange', _.debounce(@update, 500))
       return
 
     render: ->
       self = @
-      errorMsg = '$.NavDropdown: child element not found'
       @$el.each (i, el) ->
         $el = $(el)
         $link = $el.find('>a')
         if $link[0]
-          $link.data 'container', el
-          $link.on 'click', self.handler
+          $link.data('container', el)
+          $link.on('click', self.handler)
         else
-          $el.on 'click', self.handler
+          $el.on('click', self.handler)
 
-        if self.opt.child is null
+        if self.opt.child is null # tab & content mode
           if $link[0]
             $child = $($link.attr('href'))
             if !$child[0]?
               return # nothing to do
           else
-            console.error errorMsg
+            console.error(self.ERRORMSG1)
             return
-        else
+        else # child menu mode
           $child = $el.find(self.opt.child)
 
         if $child[0]?
@@ -81,9 +81,8 @@
       if $(trigger).data('container')
         trigger = $(trigger).data('container')
         $trigger = $(trigger)
-
-      # from @open ----------
       $child = $trigger.data('$child')
+
       if @blocking is true
         return
       if !$child?
@@ -97,7 +96,6 @@
           else
             self.open(trigger, $child)
         )
-      # from @open ----------
 
       @trigger('change', trigger) # event
       e.preventDefault()
