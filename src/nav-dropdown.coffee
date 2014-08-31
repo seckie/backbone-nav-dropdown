@@ -21,7 +21,7 @@
       @ERRORMSG1 = '$.NavDropdown: child element not found'
       $.extend(@opt, options)
       _.bindAll(@, 'render', 'update', 'handler',
-        'open', 'close', 'end', 'closeAll', 'closeAllEnd')
+        'open', 'close', 'closeAll', 'closeAllEnd')
       setTimeout(@render, 500)
       $(window).on('resize orientationchange', _.debounce(@update, 500))
       return
@@ -109,7 +109,12 @@
       $trigger.addClass(self.opt.activeClass)
       $child.addClass(self.opt.transitionClass)
         .height($trigger.data('childheight'))
-      @end($child)
+
+      setTimeout(() ->
+        $child.removeClass(self.opt.transitionClass)#.height('')
+        self.blocking = false
+        return
+      , @opt.transitionDuration)
 
       @current = trigger
       return
@@ -123,18 +128,15 @@
       $child.height($trigger.data('childheight'))
         .addClass(self.opt.transitionClass)
         .height(0)
-      @end($child)
 
-      @current = trigger
-      return
-    
-    end: ($el) ->
-      self = @
       setTimeout(() ->
-        $el.removeClass(self.opt.transitionClass)#.height('')
+        $child.removeClass(self.opt.transitionClass)#.height('')
         self.blocking = false
         return
       , @opt.transitionDuration)
+
+      @current = trigger
+      return
 
     closeAll: (exclude) ->
       self = @

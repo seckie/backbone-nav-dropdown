@@ -19,7 +19,7 @@
       };
       this.ERRORMSG1 = '$.NavDropdown: child element not found';
       $.extend(this.opt, options);
-      _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'end', 'closeAll', 'closeAllEnd');
+      _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'closeAll', 'closeAllEnd');
       setTimeout(this.render, 500);
       $(window).on('resize orientationchange', _.debounce(this.update, 500));
     },
@@ -118,7 +118,10 @@
       $child = $child != null ? $child : $trigger.data('$child');
       $trigger.addClass(self.opt.activeClass);
       $child.addClass(self.opt.transitionClass).height($trigger.data('childheight'));
-      this.end($child);
+      setTimeout(function() {
+        $child.removeClass(self.opt.transitionClass);
+        self.blocking = false;
+      }, this.opt.transitionDuration);
       this.current = trigger;
     },
     close: function(trigger, $child) {
@@ -128,16 +131,11 @@
       $child = $child != null ? $child : $trigger.data('$child');
       $trigger.removeClass(self.opt.activeClass);
       $child.height($trigger.data('childheight')).addClass(self.opt.transitionClass).height(0);
-      this.end($child);
-      this.current = trigger;
-    },
-    end: function($el) {
-      var self;
-      self = this;
-      return setTimeout(function() {
-        $el.removeClass(self.opt.transitionClass);
+      setTimeout(function() {
+        $child.removeClass(self.opt.transitionClass);
         self.blocking = false;
       }, this.opt.transitionDuration);
+      this.current = trigger;
     },
     closeAll: function(exclude) {
       var self;
