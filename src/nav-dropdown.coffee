@@ -21,7 +21,7 @@
       @ERRORMSG1 = '$.NavDropdown: child element not found'
       $.extend(@opt, options)
       _.bindAll(@, 'render', 'update', 'handler',
-        'open', 'close', 'end', 'closeAll')
+        'open', 'close', 'end', 'closeAll', 'closeAllEnd')
       setTimeout(@render, 500)
       $(window).on('resize orientationchange', _.debounce(@update, 500))
       return
@@ -120,7 +120,8 @@
       $child = $child ? $trigger.data('$child')
 
       $trigger.removeClass(self.opt.activeClass)
-      $child.addClass(self.opt.transitionClass)
+      $child.height($trigger.data('childheight'))
+        .addClass(self.opt.transitionClass)
         .height(0)
       @end($child)
 
@@ -137,7 +138,7 @@
 
     closeAll: (exclude) ->
       self = @
-      dfd = $.Deferred()
+        
       if @blocking is true
         return
       @blocking = true
@@ -148,10 +149,21 @@
           return
         if $child? and $el.hasClass(self.opt.activeClass)
           $el.removeClass(self.opt.activeClass)
-          $child.addClass(self.opt.transitionClass)
+          $child.height($el.data('childheight'))
+            .addClass(self.opt.transitionClass)
             .height(0)
         return
-      setTimeout(dfd.resolve, @opt.transitionDuration)
+      @closeAllEnd()
+
+    closeAllEnd: () ->
+      self = @
+      dfd = $.Deferred()
+      setTimeout(() ->
+        self.$el.each (i, el) ->
+          $child = $(el).data('$child')
+          $child.removeClass(self.opt.transitionClass) if $child?
+        dfd.resolve()
+      , self.opt.transitionDuration)
       dfd.promise()
   )
 

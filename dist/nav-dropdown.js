@@ -19,7 +19,7 @@
       };
       this.ERRORMSG1 = '$.NavDropdown: child element not found';
       $.extend(this.opt, options);
-      _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'end', 'closeAll');
+      _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'end', 'closeAll', 'closeAllEnd');
       setTimeout(this.render, 500);
       $(window).on('resize orientationchange', _.debounce(this.update, 500));
     },
@@ -127,7 +127,7 @@
       $trigger = $(trigger);
       $child = $child != null ? $child : $trigger.data('$child');
       $trigger.removeClass(self.opt.activeClass);
-      $child.addClass(self.opt.transitionClass).height(0);
+      $child.height($trigger.data('childheight')).addClass(self.opt.transitionClass).height(0);
       this.end($child);
       this.current = trigger;
     },
@@ -140,9 +140,8 @@
       }, this.opt.transitionDuration);
     },
     closeAll: function(exclude) {
-      var dfd, self;
+      var self;
       self = this;
-      dfd = $.Deferred();
       if (this.blocking === true) {
         return;
       }
@@ -156,10 +155,25 @@
         }
         if (($child != null) && $el.hasClass(self.opt.activeClass)) {
           $el.removeClass(self.opt.activeClass);
-          $child.addClass(self.opt.transitionClass).height(0);
+          $child.height($el.data('childheight')).addClass(self.opt.transitionClass).height(0);
         }
       });
-      setTimeout(dfd.resolve, this.opt.transitionDuration);
+      return this.closeAllEnd();
+    },
+    closeAllEnd: function() {
+      var dfd, self;
+      self = this;
+      dfd = $.Deferred();
+      setTimeout(function() {
+        self.$el.each(function(i, el) {
+          var $child;
+          $child = $(el).data('$child');
+          if ($child != null) {
+            return $child.removeClass(self.opt.transitionClass);
+          }
+        });
+        return dfd.resolve();
+      }, self.opt.transitionDuration);
       return dfd.promise();
     }
   });
