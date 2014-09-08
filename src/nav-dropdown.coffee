@@ -39,7 +39,8 @@
 
         if self.opt.child is null # tab & content mode
           if $link[0]
-            $child = $($link.attr('href'))
+            href = $link.attr('href')
+            $child = $(href.slice(href.lastIndexOf('#')))
             if !$child[0]?
               return # nothing to do
           else

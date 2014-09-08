@@ -27,7 +27,7 @@
       var self;
       self = this;
       this.$el.each(function(i, el) {
-        var $child, $el, $link;
+        var $child, $el, $link, href;
         $el = $(el);
         $link = $el.find('>a');
         if ($link[0]) {
@@ -38,7 +38,8 @@
         }
         if (self.opt.child === null) {
           if ($link[0]) {
-            $child = $($link.attr('href'));
+            href = $link.attr('href');
+            $child = $(href.slice(href.lastIndexOf('#')));
             if ($child[0] == null) {
               return;
             }
