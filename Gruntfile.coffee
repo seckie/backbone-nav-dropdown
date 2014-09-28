@@ -5,6 +5,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
+  grunt.loadNpmTasks 'grunt-browser-sync'
 
   grunt.initConfig(
     pkg: grunt.file.readJSON('package.json')
@@ -66,6 +67,12 @@ module.exports = (grunt) ->
         options:
           jshintrc: true
         src: [ 'dist/*.js' ]
+    browserSync:
+      bsFile:
+        src: 'demo/**/*'
+      options:
+        server:
+          baseDir: './demo'
     watch:
       coffee:
         files: [ 'src/*.coffee' ]
