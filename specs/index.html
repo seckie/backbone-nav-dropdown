@@ -6,17 +6,20 @@
 <meta name="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width" />
 <link rel="stylesheet" href="style.css" />
-<script src="jquery.min.js"></script>
-<script src="underscore.js"></script>
-<script src="backbone.js"></script>
+<script src="libs/jquery.min.js"></script>
+<script src="libs/underscore.js"></script>
+<script src="libs/backbone.js"></script>
 <script src="../dist/nav-dropdown.js"></script>
 <script>
 $(function () {
   nav = new $.NavDropdown({
     el: '.nav-dropdown>ul>li',
     transitionDuration: 250,
-    child: null
+    child: 'ul'
   })
+  nav.on('change', function (trigger) {
+    console.log('changed! trigger element is... ', trigger)
+  });
 });
 </script>
 </head>
@@ -27,32 +30,36 @@ $(function () {
 	
 <h1>backbone-nav-dropdown</h1>
 <p><a href="https://github.com/seckie/backbone-nav-dropdown">source on github</a></p>
-<p>In case of non-child submenus</p>
 
 <nav class="nav-dropdown">
 <ul class="list">
   <li><a href="#">Nav1</a></li>
-  <li><a href="#nav2">Nav2</a></li>
-  <li><a href="#nav3">Nav3</a></li>
-  <li><a href="#nav4">Nav4</a></li>
+  <li>
+  <a href="#">Nav2</a>
+  <ul class="list list-child">
+    <li><a href="#">Nav2-1</a></li>
+    <li><a href="#">Nav2-2</a></li>
+  </ul>
+  </li>
+  <li>
+  <a href="#">Nav3</a>
+  <ul class="list list-child">
+    <li><a href="#">Nav3-1</a></li>
+    <li><a href="#">Nav3-2</a></li>
+    <li><a href="#">Nav3-3</a></li>
+  </ul>
+  </li>
+  <li>
+  <a href="#">Nav4</a>
+  <ul class="list list-child">
+    <li><a href="#">Nav4-1</a></li>
+    <li><a href="#">Nav4-2</a></li>
+    <li><a href="#">Nav4-3</a></li>
+    <li><a href="#">Nav4-4</a></li>
+  </ul>
+  </li>
 </ul>
 <!--/.nav-dropdown--></nav>
-
-<ul class="list list-child" id="nav2">
-  <li><a href="#">Nav2-1</a></li>
-  <li><a href="#">Nav2-2</a></li>
-</ul>
-<ul class="list list-child" id="nav3">
-  <li><a href="#">Nav3-1</a></li>
-  <li><a href="#">Nav3-2</a></li>
-  <li><a href="#">Nav3-3</a></li>
-</ul>
-<ul class="list list-child" id="nav4">
-  <li><a href="#">Nav4-1</a></li>
-  <li><a href="#">Nav4-2</a></li>
-  <li><a href="#">Nav4-3</a></li>
-  <li><a href="#">Nav4-4</a></li>
-</ul>
 
 	
 <!--/.main--></div>

@@ -5,6 +5,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
+  grunt.loadNpmTasks 'grunt-contrib-jasmine'
   grunt.loadNpmTasks 'grunt-browser-sync'
 
   grunt.initConfig(
@@ -17,6 +18,9 @@ module.exports = (grunt) ->
           'dist/nav-dropdown.js': [
             # join
             'src/nav-dropdown.coffee'
+          ]
+          'specs/nav-dropdown.spec.js': [
+            'src/specs/*.coffee'
           ]
     coffeelint:
       # DOC: https://github.com/vojtajina/grunt-coffeelint
@@ -73,13 +77,27 @@ module.exports = (grunt) ->
       options:
         server:
           baseDir: './demo'
+    jasmine:
+      test:
+        src: 'dist/*.js'
+        options:
+          vendor: [
+            'bower_components/jquery/dist/jquery.js'
+            'bower_components/jasmine-jquery/lib/jasmine-jquery.js'
+            'bower_components/underscore/underscore.js'
+            'bower_components/backbone/backbone.js'
+          ]
+          specs: 'specs/*.spec.js'
     watch:
       coffee:
         files: [ 'src/*.coffee' ]
         tasks: [ 'coffee' ]
       coffeelint:
-        files: [ 'src/*.coffee' ]
+        files: [ 'src/**/*.coffee' ]
         tasks: [ 'coffeelint' ]
+      specs:
+        files: [ 'src/specs/*.coffee' ]
+        tasks: [ 'coffee', 'jasmine' ]
       scss:
         files: [ 'src/*.scss' ]
         tasks: [ 'compass:dev' ]
