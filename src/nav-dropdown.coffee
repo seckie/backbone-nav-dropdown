@@ -17,13 +17,14 @@
         transitionClass: 'trans'
         child: 'ul'
         activeClass: 'on'
+        events: 'resize orientationchange'
       }
       @ERRORMSG1 = '$.NavDropdown: child element not found'
       $.extend(@opt, options)
       _.bindAll(@, 'render', 'update', 'handler',
         'open', 'close', 'closeAll', 'closeAllEnd')
       setTimeout(@render, 500)
-      $(window).on('resize orientationchange', _.debounce(@update, 500))
+      $(window).on(@opt.events, _.debounce(@update, 500))
       return
 
     render: ->

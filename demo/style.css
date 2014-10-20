@@ -13,9 +13,9 @@ q:before, q:after, blockquote:before, blockquote:after { content: ""; content: n
 
 a img { border: none; }
 
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary { display: block; }
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary { display: block; }
 
-body { background-color: #dddddd; line-height: 1.5; }
+body { background-color: #ddd; line-height: 1.5; }
 
 h1 { margin: 20px 0; font-size: 36px; }
 
@@ -34,11 +34,11 @@ a { color: #3399ff; }
 .list { position: relative; background-color: #fff; *zoom: 1; font-size: 18px; line-height: 24px; }
 .list:after { content: ""; display: block; clear: both; }
 .list > li { position: relative; float: left; width: 25%; }
-.list > li a { display: block; padding: 15px 0; border-right: 1px solid #dddddd; color: #333; text-align: center; text-decoration: none; }
+.list > li a { display: block; padding: 15px 0; border-right: 1px solid #ddd; color: #333; text-align: center; text-decoration: none; }
 .list > li .list-child { width: 400%; }
 .list > li:nth-child(2) .list-child { margin-left: -100%; }
 .list > li:nth-child(3) .list-child { margin-left: -200%; }
 .list > li:nth-child(4) .list-child { margin-left: -300%; }
 
 .list-child { visibility: hidden; overflow: hidden; background-color: #f3f3ff; font-size: 14px; line-height: 24px; }
-.list-child.trans { -webkit-transition: height 250ms; -moz-transition: height 250ms; -o-transition: height 250ms; transition: height 250ms; }
+.list-child.trans { -moz-transition: height 250ms; -o-transition: height 250ms; -webkit-transition: height 250ms; transition: height 250ms; }

@@ -15,13 +15,14 @@
         transitionDuration: 250,
         transitionClass: 'trans',
         child: 'ul',
-        activeClass: 'on'
+        activeClass: 'on',
+        events: 'resize orientationchange'
       };
       this.ERRORMSG1 = '$.NavDropdown: child element not found';
       $.extend(this.opt, options);
       _.bindAll(this, 'render', 'update', 'handler', 'open', 'close', 'closeAll', 'closeAllEnd');
       setTimeout(this.render, 500);
-      $(window).on('resize orientationchange', _.debounce(this.update, 500));
+      $(window).on(this.opt.events, _.debounce(this.update, 500));
     },
     render: function() {
       var self;
